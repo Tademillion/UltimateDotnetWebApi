@@ -33,6 +33,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+var logger = app.Logger;
+logger.LogInformation("the application is running");
 //  middlewares order
 app.UseCors("allowAllOrigin");
 app.UseStaticFiles();
@@ -49,7 +51,7 @@ var summaries = new[]
 
 
 //  minimal Api
-app.MapGet("/api", () => "this is test for hello");
+app.MapGet("/", () => "this is test for hello");
 
 
 app.Run();
