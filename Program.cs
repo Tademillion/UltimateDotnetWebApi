@@ -22,12 +22,25 @@ builder.Services.AddCors(options =>
         );
     });
 });
+builder.Services.AddControllers();
 // Configure the HTTP request pipeline.
+//  wnat to configure for iis server to deploy on it
+builder.Services.Configure<IISOptions>(options =>
+{
+    // configure for IIS Deployments and have many properties
+
+});
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
+//  middlewares order
+app.UseCors("allowAllOrigin");
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 app.UseHttpsRedirection();
 
 var summaries = new[]
