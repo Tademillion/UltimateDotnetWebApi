@@ -5,7 +5,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi(); // this is for minimal apis
 
 var app = builder.Build();
-
+//  configuring the cors policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("allowAllOrigin", policy =>
+    {
+        policy.AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin()
+        .AllowCredentials()
+        .WithOrigins(
+            "http://10.100.13.44:3004",
+            "https://10.100.13.44:3004",
+            "http://localhost:3004",
+            "http://172.16.239.172:3000"
+        );
+    });
+});
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -19,23 +35,9 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+
+//  minimal Api
+app.MapGet("/api", () => "this is test for hello");
+
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
