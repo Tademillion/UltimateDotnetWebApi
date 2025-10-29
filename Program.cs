@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,8 @@ builder.Services.AddOpenApi(); // this is for minimal apis
 builder.Services.AddScoped<ISendMessage, SendEmailMessage>();
 builder.Services.AddScoped<ISendMessage, SendsmsMessage>();
 // builder.Host.UseSerilog();
+//  configure the Dbcontext Classs
+builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors(options =>
 {
