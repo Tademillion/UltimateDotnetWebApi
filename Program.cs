@@ -7,13 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi(); // this is for minimal apis
 //  configuring the cors policy
 //  configure serilog
-Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug() // Set the minimum logging level
-            .WriteTo.Console()    // Log to the console
-            .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day) // Log to a file, rolling daily
-            .CreateLogger();
+// Log.Logger = new LoggerConfiguration()
+//             .MinimumLevel.Debug() // Set the minimum logging level
+//             .WriteTo.Console()    // Log to the console
+//             .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day) // Log to a file, rolling daily
+//             .CreateLogger();
 
-builder.Host.UseSerilog();
+//  register the services
+builder.Services.AddScoped<ISendMessage, SendEmailMessage>();
+builder.Services.AddScoped<ISendMessage, SendsmsMessage>();
+// builder.Host.UseSerilog();
 
 builder.Services.AddCors(options =>
 {
