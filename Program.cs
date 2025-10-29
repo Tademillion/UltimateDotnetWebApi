@@ -1,9 +1,20 @@
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(); // this is for minimal apis
 //  configuring the cors policy
+//  configure serilog
+Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug() // Set the minimum logging level
+            .WriteTo.Console()    // Log to the console
+            .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day) // Log to a file, rolling daily
+            .CreateLogger();
+
+builder.Host.UseSerilog();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins", policy =>
@@ -27,7 +38,8 @@ builder.Services.Configure<IISOptions>(options =>
     // configure for IIS Deployments and have many properties
 
 });
-builder.Logging.ClearProviders();// clear the default providers
+// builder.Logging.ClearProviders(); 
+// builder.Logging.AddConsole();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
