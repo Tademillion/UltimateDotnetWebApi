@@ -27,6 +27,7 @@ builder.Services.Configure<IISOptions>(options =>
     // configure for IIS Deployments and have many properties
 
 });
+builder.Logging.ClearProviders();// clear the default providers
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
