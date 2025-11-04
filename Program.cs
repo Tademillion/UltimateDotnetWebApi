@@ -61,10 +61,7 @@ internal class Program
 
         //  middlewares order
         app.UseCors("allowAllOrigin");
-        var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
-        var loggers = loggerFactory.CreateLogger("ExceptionMiddlewareExtensions"); // Use any category name you want
-
-        app.ConfigureExceptionHandler(loggers);
+        app.UseMiddleware<GlobalExceptionMiddleware>();
         app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthentication();

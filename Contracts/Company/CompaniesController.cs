@@ -23,6 +23,7 @@ public class CompaniesController : ControllerBase
         // }).ToList();
         //  in above we use manully mapping so Auto mapper is better
         var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+        // throw new Exception(); to simulate  the exceptions
         return Ok(companiesDto);
 
     }
