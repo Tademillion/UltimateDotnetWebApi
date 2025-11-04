@@ -1,16 +1,12 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
-public class CompaniesController : ControllerBase
+public class CompaniesController(IRepositoryManager repo, IMapper mapper) : ControllerBase
 {
-    private readonly IRepositoryManager _repo;
-    private readonly IMapper _mapper;
-    public CompaniesController(IRepositoryManager repo, IMapper mapper)
-    {
-        _repo = repo;
-        _mapper = mapper;
-    }
-    [HttpGet("companies")]
+    private readonly IRepositoryManager _repo = repo;
+    private readonly IMapper _mapper = mapper;
+
+    [HttpGet("api/companies")]
     public async Task<ActionResult> getCompanies()
     {
         var companies = _repo.Company.GetAllCompanies(false);
@@ -38,6 +34,5 @@ public class CompaniesController : ControllerBase
             var companyDto = _mapper.Map<CompanyDto>(company);
             return Ok(companyDto);
         }
-
     }
 }

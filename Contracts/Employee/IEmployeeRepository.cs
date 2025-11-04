@@ -1,3 +1,6 @@
 public interface IEmployeeRepository
 {
+    IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges);
+    Employee getEmployee(Guid companyId, Guid employeeId, bool trackChanges);
+
 }
