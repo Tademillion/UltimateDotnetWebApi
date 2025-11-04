@@ -38,3 +38,10 @@ public class Employee
     [ForeignKey(nameof(Company))]
     public Guid CompanyId { get; set; }
 }
+//  dto for inputs but we need to use different dto for output as well and mapp to the compnay
+public class CompanyForCreationDto
+{
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public string Country { get; set; }
+}
