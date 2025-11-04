@@ -27,7 +27,11 @@ internal class Program
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();// register the services
                                                                             // builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        // used to chnage only json to different response types
+        builder.Services.AddControllers(config =>
+        {
+            config.RespectBrowserAcceptHeader = true;
+            config.ReturnHttpNotAcceptable = true;
+        }).AddXmlDataContractSerializerFormatters();// used to chnage only json to different response types
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowSpecificOrigins", policy =>
@@ -43,7 +47,7 @@ internal class Program
                     .AllowCredentials();
             });
         });
-        builder.Services.AddControllers();
+        // builder.Services.AddControllers();
         // Configure the HTTP request pipeline.
         //  wnat to configure for iis server to deploy on it
         builder.Services.Configure<IISOptions>(options =>
