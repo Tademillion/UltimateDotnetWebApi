@@ -58,8 +58,7 @@ internal class Program
         {
             app.MapOpenApi();
         }
-        var logger = app.Logger;
-        logger.LogInformation("the application is running");
+
         //  middlewares order
         app.UseCors("allowAllOrigin");
         var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
