@@ -11,6 +11,14 @@ public class CompaniesController : ControllerBase
     public async Task<ActionResult> getCompanies()
     {
         var companies = _repo.Company.GetAllCompanies(false);
-        return Ok(companies);
+        //  add Dto instead 
+        var companiesDto = companies.Select(c => new CompanyDto
+        {
+            Id = c.Id,
+            Name = c.Name,
+            FullAddress = string.Join(' ', c.Address, c.Country)
+        }).ToList();
+        //  in above we use manully mapping so Auto mapper is better
+        return Ok(companiesDto);
     }
 }
