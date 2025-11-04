@@ -27,6 +27,7 @@ internal class Program
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();// register the services
                                                                             // builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        // used to chnage only json to different response types
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowSpecificOrigins", policy =>
