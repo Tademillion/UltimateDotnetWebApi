@@ -20,7 +20,7 @@ builder.Services.AddScoped<ISendMessage, SendsmsMessage>();
 // builder.Host.UseSerilog();
 //  configure the Dbcontext Classs
 builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();// register the services
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins", policy =>
