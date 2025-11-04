@@ -21,6 +21,8 @@ builder.Services.AddScoped<ISendMessage, SendsmsMessage>();
 //  configure the Dbcontext Classs
 builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();// register the services
+// builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins", policy =>
@@ -56,6 +58,7 @@ var logger = app.Logger;
 logger.LogInformation("the application is running");
 //  middlewares order
 app.UseCors("allowAllOrigin");
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
