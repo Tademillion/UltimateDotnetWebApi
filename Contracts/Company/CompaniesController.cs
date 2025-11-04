@@ -1,12 +1,13 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
+[Route("api/companies")]
 public class CompaniesController(IRepositoryManager repo, IMapper mapper) : ControllerBase
 {
     private readonly IRepositoryManager _repo = repo;
     private readonly IMapper _mapper = mapper;
 
-    [HttpGet("api/companies")]
+    [HttpGet]
     public async Task<ActionResult> getCompanies()
     {
         var companies = _repo.Company.GetAllCompanies(false);
@@ -23,7 +24,7 @@ public class CompaniesController(IRepositoryManager repo, IMapper mapper) : Cont
         return Ok(companiesDto);
 
     }
-    [HttpGet("api/companies/{id}")]
+    [HttpGet("{id}", Name = "id")]// this should adde in order to get  CreatedAtRoute with correct http response
     public async Task<ActionResult> getSingleCompany(Guid id)
     {
         var company = _repo.Company.GetCompany(id, false);
@@ -34,5 +35,16 @@ public class CompaniesController(IRepositoryManager repo, IMapper mapper) : Cont
             var companyDto = _mapper.Map<CompanyDto>(company);
             return Ok(companyDto);
         }
+    }
+    //  create the company
+    [HttpPost]
+    public async Task<ActionResult> createCompany([FromBody] CompanyForCreationDto company)
+    {
+        var companyEntity = _mapper.Map<Company>(company);// convert the company to Company
+        _repo.Company.CreateCompany(companyEntity);
+        _repo.Save();
+        var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+
+        return CreatedAtRoute("id", new { id = companyToReturn.Id }, companyToReturn);
     }
 }
