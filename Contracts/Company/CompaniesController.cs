@@ -27,4 +27,17 @@ public class CompaniesController : ControllerBase
         return Ok(companiesDto);
 
     }
+    [HttpGet("api/companies/{id}")]
+    public async Task<ActionResult> getSingleCompany(Guid id)
+    {
+        var company = _repo.Company.GetCompany(id, false);
+        if (company == null)
+            return NotFound();
+        else
+        {
+            var companyDto = _mapper.Map<CompanyDto>(company);
+            return Ok(companyDto);
+        }
+
+    }
 }
