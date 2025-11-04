@@ -1,0 +1,49 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+public class getEmployees : ControllerBase
+{
+    private RepositoryContext _Context;
+    public getEmployees(RepositoryContext context)
+    {
+        _Context = context;
+    }
+    [HttpGet("employeesadd")]
+    public async Task<IActionResult> AddEmployees([FromBody] Employee employee)
+    {
+        try
+        {
+            var newEmployee = new Employee
+            {
+                Id = new Guid("80abbca8-664d-4b20-b5de-024705497d4a"),
+                Name = "Sam Raiden",
+                Age = 26,
+                Position = "Software developer",
+                CompanyId = new Guid("c9d4c053-49b6-410c-bc78-2d54a9991870")
+            };
+            var addemloyee = _Context.Employees.Add(newEmployee);
+            await _Context.SaveChangesAsync();
+            return Ok(addemloyee);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(500, "internal Server Error happen");
+        }
+    }
+    [HttpGet("employees")]
+    public async Task<IActionResult> GetCompanies()
+    {
+        try
+        {
+            var employees = await _Context.Employees.ToListAsync();
+            return Ok(employees);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+}
