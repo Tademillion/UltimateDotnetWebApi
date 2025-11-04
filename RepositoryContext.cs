@@ -13,7 +13,7 @@ public class RepositoryContext : DbContext
     }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Employee> Employees { get; set; }
-    //  creating migration sin dotnet core 
+    //  creating migration in dotnet core 
     //  install EF core for Dbcontext 
     //  creating models for  our tables 
     //  the craate dbcontext class for our models 
