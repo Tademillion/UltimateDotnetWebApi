@@ -61,7 +61,8 @@ internal class Program
 
         //  middlewares order
         app.UseCors("allowAllOrigin");
-        app.UseMiddleware<GlobalExceptionMiddleware>();
+        // app.UseMiddleware<GlobalExceptionMiddleware>();
+        app.UseGlobalExceptionHandler();//
         app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthentication();

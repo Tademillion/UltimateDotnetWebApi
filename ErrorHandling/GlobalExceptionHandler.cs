@@ -53,5 +53,22 @@ public class GlobalExceptionMiddleware
 
         await context.Response.WriteAsync(JsonSerializer.Serialize(problem, options));
     }
+    //  useMiddlewares
+    // public static class GlobalExceptionHandler
+    // {
+    //     public static IApplicationBuilder UseGlobalExceptionHandler( this IApplicationBuilder build)
+    //     {
+    //         return build.UseMiddleware<GlobalExceptionMiddleware>();
+    //     }
+    // }
+    // This class should be static
+
+}
+public static class GlobalExceptionHandlerExtensions
+{
+    public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder build)
+    {
+        return build.UseMiddleware<GlobalExceptionMiddleware>();
+    }
 }
 
