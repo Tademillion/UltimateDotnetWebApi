@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MyApp;
 using Serilog;
 
 internal class Program
@@ -22,6 +23,7 @@ internal class Program
         builder.Services.AddScoped<ISendMessage, SendEmailMessage>();
         builder.Services.AddScoped<ISendMessage, SendsmsMessage>();
         // builder.Host.UseSerilog();
+        builder.Services.AddScoped<IEmployeeRepo, EmployeeRepos>();
         //  configure the Dbcontext Classs
         builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();// register the services

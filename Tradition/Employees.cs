@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MyApp;
 
 public class getEmployees : ControllerBase
 {
-    private RepositoryContext _Context;
-    public getEmployees(RepositoryContext context)
+    private readonly RepositoryContext _Context;
+    private readonly IEmployeeRepo _repo;
+    public getEmployees(RepositoryContext context, IEmployeeRepo repo)
     {
         _Context = context;
+        _repo = repo;
     }
     [HttpGet("employeesadd")]
     public async Task<IActionResult> AddEmployees([FromBody] Employee employee)
@@ -36,7 +39,8 @@ public class getEmployees : ControllerBase
     {
         try
         {
-            var employees = await _Context.Employees.ToListAsync();
+            // var employees = await _Context.Employees.ToListAsync();
+            var employees = _repo.getAllEmployees();
             return Ok(employees);
         }
         catch (Exception ex)
