@@ -24,6 +24,7 @@ internal class Program
         builder.Services.AddScoped<ISendMessage, SendsmsMessage>();
         // builder.Host.UseSerilog();
         builder.Services.AddScoped<IEmployeeRepo, EmployeeRepos>();
+        builder.Services.AddScoped<IEmployeeCleanRepo, EmployeeCleanRepo>();
         //  configure the Dbcontext Classs
         builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();// register the services
