@@ -15,6 +15,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
   // Its primary purpose is to serve as a base class for other classes, providing a common foundation,
   //  shared functionality, and enforcing a specific structure or contract on its derived classes
   //  all method should not have implemnted
+  //  it provide partials and default implementations
   public IQueryable<T> FindAll(bool trackChanges) =>
   !trackChanges ?
 RepositoryContext.Set<T>()
