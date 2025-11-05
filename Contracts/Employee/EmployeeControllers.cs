@@ -48,4 +48,14 @@ public class EmployeControllers : ControllerBase
 
         return CreatedAtRoute("id", new { id = employeeToReturn.Id }, employeeToReturn);
     }
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteEmployeeForCompany(Guid companyid, Guid id)
+    {
+        var isUserExist = _repo.Employee.getEmployee(companyid, id, false);
+        if (isUserExist == null)
+            return NoContent();
+        var employeeEntity = _mapper.Map<Employee>(isUserExist);
+        _repo.Employee.DeleteEmployee(employeeEntity);
+        return Ok("the resource is deleted succesully");
+    }
 }

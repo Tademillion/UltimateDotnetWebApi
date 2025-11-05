@@ -16,6 +16,8 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
       trackChanges).SingleOrDefault();
 
   public void CreateEmployee(Guid companyID, Employee employee) { employee.CompanyId = companyID; Create(employee); }
+
+  public void DeleteEmployee(Employee employee) => Delete(employee);
 }
 
 

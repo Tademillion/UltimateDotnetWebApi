@@ -14,8 +14,14 @@ public class EmployeeRepos : IEmployeeRepo
         _context.SaveChanges();// this is waht happening in the back now lets improve this stpes onece again
     }
 
-    public IEnumerable<Employee> getAllEmployees()
+    IEnumerable<Employee> IEmployeeRepo.getAllEmployees()
     {
         return _context.Employees.ToList();
     }
+
+
+    // public IEnumerable<Employee> getAllEmployees =>
+
+
+
 }
