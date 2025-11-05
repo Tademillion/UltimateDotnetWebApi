@@ -33,18 +33,18 @@ public class EmployeControllers : ControllerBase
         return Ok(employeeFromDb);
     }
     [HttpPost]
-    public async Task<ActionResult> CreateEmployeeForCompany([FromBody] EmployeeCreationDto employeedto)
+    public async Task<ActionResult> CreateEmployeeForCompany(Guid companyID, [FromBody] EmployeeCreationDto employee)
     {
-        var companyId = _repo.Company.GetCompany(employeedto.CompanyId, false);
+        var companyId = _repo.Company.GetCompany(companyID, false);
         if (companyId == null)
             return NotFound();
-        //  i should have mapp it to the employee
-        var employeeEntity = _mapper.Map<Employee>(employeedto);
+        //  i should have map it to the employee
+        var employeeEntity = _mapper.Map<Employee>(employee);
 
-        _repo.Employee.CreateEmployee(employeeEntity);
+        _repo.Employee.CreateEmployee(companyID, employeeEntity);
         _repo.Save();
-        var employeeToReturn = _mapper.Map<EmployeeCreationDto>(employeeEntity);
+        var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);// output then input
 
-        return CreatedAtRoute("id", new { id = employeeToReturn.CompanyId }, employeeToReturn);
+        return CreatedAtRoute("id", new { id = employeeToReturn.Id }, employeeToReturn);
     }
 }

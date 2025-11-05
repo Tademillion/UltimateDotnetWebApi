@@ -8,6 +8,9 @@ public class MappingProfile : Profile
             .ForMember(c => c.FullAddress,
                 opt => opt.MapFrom(x => $"{x.Address} {x.Country}"));
         CreateMap<CompanyForCreationDto, Company>();
+        // 
+        CreateMap<EmployeeCreationDto, Employee>();
+        CreateMap<Employee, EmployeeDto>();
     }
 }
 
