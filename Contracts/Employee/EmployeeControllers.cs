@@ -35,6 +35,7 @@ public class EmployeControllers : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateEmployeeForCompany(Guid companyID, [FromBody] EmployeeCreationDto employee)
     {
+        //  the Route is not caseSensetive
         var companyId = _repo.Company.GetCompany(companyID, false);
         if (companyId == null)
             return NotFound();
