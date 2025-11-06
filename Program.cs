@@ -34,7 +34,8 @@ internal class Program
         {
             config.RespectBrowserAcceptHeader = true;
             config.ReturnHttpNotAcceptable = true;
-        }).AddXmlDataContractSerializerFormatters();// used to chnage only json to different response types
+        }).AddNewtonsoftJson()// for patch requests
+        .AddXmlDataContractSerializerFormatters();// used to chnage only json to different response types
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowSpecificOrigins", policy =>

@@ -12,8 +12,7 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
                   .OrderBy(e => e.Name);
 
   public Employee getEmployee(Guid companyId, Guid employeeId, bool trackChanges) =>
-        FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(employeeId),
-      trackChanges).SingleOrDefault();
+        FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(employeeId), trackChanges).SingleOrDefault();
 
   public void CreateEmployee(Guid companyID, Employee employee) { employee.CompanyId = companyID; Create(employee); }
 
