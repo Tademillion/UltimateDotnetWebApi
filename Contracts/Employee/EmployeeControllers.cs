@@ -73,6 +73,11 @@ public class EmployeControllers : ControllerBase
     public IActionResult UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
     {
         //  
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+
+        }
         if (employee == null)
         {
             _logger.LogInformation("the body is required");
