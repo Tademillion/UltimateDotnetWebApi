@@ -108,6 +108,11 @@ public class EmployeControllers : ControllerBase
     public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id,
 [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
     {
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Invalid model state for the patch document");
+            return UnprocessableEntity(ModelState);
+        }
         if (patchDoc == null)
         {
             _logger.LogError("patchDoc object sent from client is null.");
