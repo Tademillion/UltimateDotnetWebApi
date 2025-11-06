@@ -26,7 +26,7 @@ public class EmployeControllers : ControllerBase
         var employeesFromDb = _repo.Employee.GetEmployees(companyId, trackChanges: false);
         return Ok(employeesFromDb);
     }
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetEmployeeForCompany")]
     public async Task<ActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
     {
         var company = _repo.Company.GetCompany(companyId, trackChanges: false);
@@ -37,20 +37,25 @@ public class EmployeControllers : ControllerBase
         return Ok(employeeFromDb);
     }
     [HttpPost]
-    public async Task<ActionResult> CreateEmployeeForCompany(Guid companyID, [FromBody] EmployeeCreationDto employee)
+    public async Task<ActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeCreationDto employee)
     {
         //  the Route is not caseSensetive
-        var companyId = _repo.Company.GetCompany(companyID, false);
-        if (companyId == null)
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var company = _repo.Company.GetCompany(companyId, false);
+        if (company == null)
             return NotFound();
         //  i should have map it to the employee
         var employeeEntity = _mapper.Map<Employee>(employee);
 
-        _repo.Employee.CreateEmployee(companyID, employeeEntity);
+        _repo.Employee.CreateEmployee(companyId, employeeEntity);
         _repo.Save();
         var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);// output then input
 
-        return CreatedAtRoute("id", new { id = employeeToReturn.Id }, employeeToReturn);
+        // return CreatedAtRoute("GetEmployeeForCompany", new { id = employeeToReturn.Id }, employeeToReturn);
+        return Ok("the user is creatde");
     }
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteEmployeeForCompany(Guid companyid, Guid id)
