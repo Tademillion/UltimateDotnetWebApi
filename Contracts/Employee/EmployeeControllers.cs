@@ -56,6 +56,6 @@ public class EmployeControllers : ControllerBase
             return NoContent();
         var employeeEntity = _mapper.Map<Employee>(isUserExist);
         _repo.Employee.DeleteEmployee(employeeEntity);
-        return Ok("the resource is deleted succesully");
+        return NoContent();
     }
 }

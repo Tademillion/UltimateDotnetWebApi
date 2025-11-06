@@ -1,11 +1,19 @@
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/companies")]
-public class CompaniesController(IRepositoryManager repo, IMapper mapper) : ControllerBase
+public class CompaniesController : ControllerBase
 {
-    private readonly IRepositoryManager _repo = repo;
-    private readonly IMapper _mapper = mapper;
+    private readonly IRepositoryManager _repo;
+    private readonly IMapper _mapper;
+    private readonly ILogger<CompaniesController> _logger;
+    public CompaniesController(ILogger<CompaniesController> logger, IRepositoryManager repo, IMapper mapper)
+    {
+        _logger = logger;
+        _mapper = mapper;
+        _repo = repo;
+    }
 
     [HttpGet]
     public async Task<ActionResult> getCompanies()
@@ -86,4 +94,24 @@ IEnumerable<CompanyForCreationDto> companyCollection)
         return CreatedAtRoute("CompanyCollection", new { ids },
         companyCollectionToReturn);
     }
+    //  delete the  company
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> deleteCompany(Guid id)
+    {
+        //  find the company
+        var company = _repo.Company.GetCompany(id, false);
+        _logger.LogInformation("The deleted company will be {@company}", JsonSerializer.Serialize(company));
+
+
+        if (company == null)
+        {
+            _logger.LogInformation($"Company with id: {id} doesn't exist in the database.");
+            return NotFound();
+        }
+
+        _repo.Company.DeleteCompany(company);
+        _repo.Save();
+        return NoContent();
+    }
+
 }
