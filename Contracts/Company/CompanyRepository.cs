@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MyApp;
 
 public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
@@ -10,18 +11,21 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
 
 
   //  we can acces the RepositoryBase method in this class
-  public IEnumerable<Company> GetAllCompanies(bool trackChanges) =>
- FindAll(trackChanges)
-   .OrderBy(c => c.Name)
-   .ToList();
+  public async Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges) =>
+     await FindAll(trackChanges).OrderBy(c => c.Name).ToListAsync();
 
-  public Company GetCompany(Guid companyId, bool trackChanges) =>
-     FindByCondition(m => m.Id.Equals(companyId), trackChanges).SingleOrDefault();
+
+  public async Task<Company> GetCompanyAsync(Guid companyId, bool trackChanges) =>
+  await FindByCondition(m => m.Id.Equals(companyId), trackChanges).SingleOrDefaultAsync();
   public void CreateCompany(Company company) => Create(company);// 
 
-  public IEnumerable<Company> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
-FindByCondition(x => ids.Contains(x.Id), trackChanges)
-.ToList();
+  public async Task<IEnumerable<Company>> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
+  await FindByCondition(x => ids.Contains(x.Id), trackChanges)
+   .ToListAsync();
 
   public void DeleteCompany(Company company) => Delete(company);
+
+  public async Task<IEnumerable<Company>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges) =>
+  await FindByCondition(x => ids.Contains(x.Id), trackChanges)
+      .ToListAsync();
 }

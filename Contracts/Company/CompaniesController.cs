@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ public class CompaniesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult> getCompanies()
     {
-        var companies = _repo.Company.GetAllCompanies(false);
+        var companies = await _repo.Company.GetAllCompaniesAsync(false);
         //  add Dto instead 
         // var companiesDto = companies.Select(c => new CompanyDto
         // {
@@ -35,7 +36,7 @@ public class CompaniesController : ControllerBase
     [HttpGet("{id}")]// this should adde in order to get  CreatedAtRoute with correct http response
     public async Task<ActionResult> getSingleCompany(Guid id)
     {
-        var company = _repo.Company.GetCompany(id, false);
+        var company = await _repo.Company.GetCompanyAsync(id, false);
         if (company == null)
             return NotFound();
         else
@@ -50,14 +51,14 @@ public class CompaniesController : ControllerBase
     {
         var companyEntity = _mapper.Map<Company>(company);// convert the company to Company
         _repo.Company.CreateCompany(companyEntity);
-        _repo.Save();
+        await _repo.SaveAsync();
         var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
 
         return CreatedAtRoute("id", new { id = companyToReturn.Id }, companyToReturn);
     }
     [HttpGet("collection/({ids})", Name = "CompanyCollection")]
     // public IActionResult GetCompanyCollection(IEnumerable<Guid> ids)
-    public IActionResult GetCompanyCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+    public async Task<IActionResult> GetCompanyCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
     {
         Console.WriteLine($"ids is: {string.Join(", ", ids)}");
 
@@ -65,7 +66,7 @@ public class CompaniesController : ControllerBase
         {
             return BadRequest("Parameter ids is null");
         }
-        var companyEntities = _repo.Company.GetByIds(ids, trackChanges: false);
+        var companyEntities = await _repo.Company.GetByIdsAsync(ids, trackChanges: false);
         if (ids.Count() != companyEntities.Count())
         {
             return NotFound();
@@ -75,7 +76,7 @@ public class CompaniesController : ControllerBase
     }
     // create collection of companies 
     [HttpPost("collection")]
-    public IActionResult CreateCompanyCollection([FromBody]
+    public async Task<IActionResult> CreateCompanyCollection([FromBody]
 IEnumerable<CompanyForCreationDto> companyCollection)
     {
         if (companyCollection == null)
@@ -87,7 +88,7 @@ IEnumerable<CompanyForCreationDto> companyCollection)
         {
             _repo.Company.CreateCompany(company);
         }
-        _repo.Save();
+        await _repo.SaveAsync();
         var companyCollectionToReturn =
         _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
         var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
@@ -99,7 +100,7 @@ IEnumerable<CompanyForCreationDto> companyCollection)
     public async Task<ActionResult> deleteCompany(Guid id)
     {
         //  find the company
-        var company = _repo.Company.GetCompany(id, false);
+        var company = await _repo.Company.GetCompanyAsync(id, false);
         _logger.LogInformation("The deleted company will be {@company}", JsonSerializer.Serialize(company));
 
 
@@ -110,7 +111,7 @@ IEnumerable<CompanyForCreationDto> companyCollection)
         }
 
         _repo.Company.DeleteCompany(company);
-        _repo.Save();
+        await _repo.SaveAsync();
         return NoContent();
     }
 
