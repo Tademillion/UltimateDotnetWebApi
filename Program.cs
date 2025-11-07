@@ -28,6 +28,9 @@ internal class Program
         //  configure the Dbcontext Classs
         builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();// register the services
+                                                                            //  adda ctionfilter controller levels
+
+        builder.Services.AddScoped<ValidationFilterAttribute>();
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         builder.Services.AddControllers(config =>

@@ -38,13 +38,15 @@ public class EmployeControllers : ControllerBase
         return Ok(employeeFromDb);
     }
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<ActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeCreationDto employee)
     {
         //  the Route is not caseSensetive
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        //  we can repllace the model state instead of using the action filter
+        // if (!ModelState.IsValid)
+        // {
+        //     return BadRequest(ModelState);
+        // }
         var company = await _repo.Company.GetCompanyAsync(companyId, false);
         if (company == null)
             return NotFound();
