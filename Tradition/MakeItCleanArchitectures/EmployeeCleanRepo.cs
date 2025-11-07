@@ -4,7 +4,8 @@ public class EmployeeCleanRepo : BaseAppRepository<Employee>, IEmployeeCleanRepo
     {
         // initializing the base repo constructors base is must because the base class has paramtrized constructors
     }
-    public IEnumerable<Employee> AllEmployees() => FindAll().ToList();
+    public IEnumerable<Employee> AllEmployees() => FindAll().ToList().Skip(2).Take(3);
+    //  paginations in this cases
 
     public void CreateEmployees(Employee employee) =>
         Create(employee);

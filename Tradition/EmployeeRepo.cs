@@ -16,7 +16,7 @@ public class EmployeeRepos : IEmployeeRepo
 
     IEnumerable<Employee> IEmployeeRepo.getAllEmployees()
     {
-        return _context.Employees.ToList();
+        return _context.Employees.ToList().Skip(2).Take(3);
     }
 
 
