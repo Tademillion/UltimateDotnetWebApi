@@ -18,13 +18,13 @@ public class EmployeControllers : ControllerBase
         _logger = logger;
     }
     [HttpGet]
-    public async Task<ActionResult> GetEmployeesForCompany(Guid companyId)
+    public async Task<ActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters parameters)
     {
         var company = await _repo.Company.GetCompanyAsync(companyId, trackChanges: false);
         if (company == null)
             return NotFound();
 
-        var employeesFromDb = await _repo.Employee.GetEmployeesAsync(companyId, trackChanges: false);
+        var employeesFromDb = await _repo.Employee.GetEmployeesAsync(companyId, parameters, trackChanges: false);
         return Ok(employeesFromDb);
     }
     [HttpGet("{id}", Name = "GetEmployeeForCompany")]

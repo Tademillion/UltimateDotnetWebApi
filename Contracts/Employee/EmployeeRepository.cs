@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyApp;
 
@@ -7,9 +8,11 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
   : base(repositoryContext)
   {
   }
-  public async Task<IEnumerable<Employee>> GetEmployeesAsync(Guid companyId, bool trackChanges) =>
+  public async Task<IEnumerable<Employee>> GetEmployeesAsync(Guid companyId, [FromQuery] EmployeeParameters parameters, bool trackChanges) =>
                 await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
-                  .OrderBy(e => e.Name).ToListAsync();
+                  .OrderBy(e => e.Name).Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                  .Take(parameters.PageSize)
+                  .ToListAsync();
   public async Task<Employee> getEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges) =>
        await FindByCondition(e => e.CompanyId.Equals(companyId)
        && e.Id.Equals(employeeId), trackChanges).SingleOrDefaultAsync();
