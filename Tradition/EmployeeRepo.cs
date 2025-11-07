@@ -14,9 +14,9 @@ public class EmployeeRepos : IEmployeeRepo
         _context.SaveChanges();// this is waht happening in the back now lets improve this stpes onece again
     }
 
-    IEnumerable<Employee> IEmployeeRepo.getAllEmployees()
+    IEnumerable<Employee> IEmployeeRepo.getAllEmployees(int PageNumber, int PageSize)
     {
-        return _context.Employees.ToList().Skip(2).Take(3);
+        return _context.Employees.ToList().Skip(PageNumber - 1 * PageSize).Take(PageSize);
     }
 
 

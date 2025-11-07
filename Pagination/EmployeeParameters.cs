@@ -1,4 +1,4 @@
-public abstract class RequestParameters
+public class RequestParameters
 {
     const int maxPageSize = 50;
     public int PageNumber { get; set; } = 1;
@@ -15,6 +15,8 @@ public abstract class RequestParameters
         }
     }
 }
+
 public class EmployeeParameters : RequestParameters
 {
+    //  for examples if we want to add more parameters specific to employee
 }

@@ -2,7 +2,7 @@
 
 public interface IEmployeeRepo
 {
-    IEnumerable<Employee> getAllEmployees();
+    IEnumerable<Employee> getAllEmployees(int PageNumber, int PageSize);
     void CreateEmployee(Employee employee);
 
 }

@@ -20,7 +20,6 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
 
   public void DeleteEmployee(Employee employee) => Delete(employee);
 
-
 }
 
 

@@ -35,12 +35,12 @@ public class getEmployees : ControllerBase
         }
     }
     [HttpGet("employees")]
-    public async Task<IActionResult> GetCompanies()
+    public async Task<IActionResult> GetCompanies(int PageNumber = 1, int PageSize = 10)
     {
         try
         {
             // var employees = await _Context.Employees.ToListAsync();
-            var employees = _repo.getAllEmployees();
+            var employees = _repo.getAllEmployees(PageNumber, PageSize);
             return Ok(employees);
         }
         catch (Exception ex)
