@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MyApp;
 
 public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
@@ -6,17 +7,17 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
   : base(repositoryContext)
   {
   }
-
-  public IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges) =>
-                  FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
-                  .OrderBy(e => e.Name);
-
-  public Employee getEmployee(Guid companyId, Guid employeeId, bool trackChanges) =>
-        FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(employeeId), trackChanges).SingleOrDefault();
-
+  public async Task<IEnumerable<Employee>> GetEmployeesAsync(Guid companyId, bool trackChanges) =>
+                await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+                  .OrderBy(e => e.Name).ToListAsync();
+  public async Task<Employee> getEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges) =>
+       await FindByCondition(e => e.CompanyId.Equals(companyId)
+       && e.Id.Equals(employeeId), trackChanges).SingleOrDefaultAsync();
   public void CreateEmployee(Guid companyID, Employee employee) { employee.CompanyId = companyID; Create(employee); }
 
   public void DeleteEmployee(Employee employee) => Delete(employee);
+
+
 }
 
 

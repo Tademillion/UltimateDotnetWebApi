@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -19,21 +20,21 @@ public class EmployeControllers : ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetEmployeesForCompany(Guid companyId)
     {
-        var company = _repo.Company.GetCompany(companyId, trackChanges: false);
+        var company = await _repo.Company.GetCompanyAsync(companyId, trackChanges: false);
         if (company == null)
             return NotFound();
 
-        var employeesFromDb = _repo.Employee.GetEmployees(companyId, trackChanges: false);
+        var employeesFromDb = await _repo.Employee.GetEmployeesAsync(companyId, trackChanges: false);
         return Ok(employeesFromDb);
     }
     [HttpGet("{id}", Name = "GetEmployeeForCompany")]
     public async Task<ActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
     {
-        var company = _repo.Company.GetCompany(companyId, trackChanges: false);
+        var company = await _repo.Company.GetCompanyAsync(companyId, trackChanges: false);
         if (company == null)
             return NotFound();
 
-        var employeeFromDb = _repo.Employee.getEmployee(companyId, id, trackChanges: false);
+        var employeeFromDb = await _repo.Employee.getEmployeeAsync(companyId, id, trackChanges: false);
         return Ok(employeeFromDb);
     }
     [HttpPost]
@@ -44,14 +45,14 @@ public class EmployeControllers : ControllerBase
         {
             return BadRequest(ModelState);
         }
-        var company = _repo.Company.GetCompany(companyId, false);
+        var company = await _repo.Company.GetCompanyAsync(companyId, false);
         if (company == null)
             return NotFound();
         //  i should have map it to the employee
         var employeeEntity = _mapper.Map<Employee>(employee);
 
         _repo.Employee.CreateEmployee(companyId, employeeEntity);
-        _repo.Save();
+        await _repo.SaveAsync();
         var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);// output then input
 
         // return CreatedAtRoute("GetEmployeeForCompany", new { id = employeeToReturn.Id }, employeeToReturn);
@@ -60,7 +61,7 @@ public class EmployeControllers : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteEmployeeForCompany(Guid companyid, Guid id)
     {
-        var isUserExist = _repo.Employee.getEmployee(companyid, id, false);
+        var isUserExist = await _repo.Employee.getEmployeeAsync(companyid, id, false);
         if (isUserExist == null)
             return NoContent();
         var employeeEntity = _mapper.Map<Employee>(isUserExist);
@@ -70,7 +71,7 @@ public class EmployeControllers : ControllerBase
     //  updadet the employee 
 
     [HttpPut("{id}")]
-    public IActionResult UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
+    public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
     {
         //  
         if (!ModelState.IsValid)
@@ -84,14 +85,14 @@ public class EmployeControllers : ControllerBase
             return BadRequest("the body is required");
         }
         //  get company
-        var company = _repo.Company.GetCompany(companyId, false);
+        var company = await _repo.Company.GetCompanyAsync(companyId, false);
         if (company == null)
         {
             _logger.LogInformation("the company with {companyID} is not exist", companyId);
             return NotFound();
         }
         //  get employee
-        var employeeEntity = _repo.Employee.getEmployee(companyId, id, trackChanges: true);
+        var employeeEntity = await _repo.Employee.getEmployeeAsync(companyId, id, trackChanges: true);
         if (employeeEntity == null)
         {
             _logger.LogInformation("the employee  withcompaniId: {companyID}  and employeeid: {id}  is not exist", companyId, id);
@@ -100,12 +101,12 @@ public class EmployeControllers : ControllerBase
         // 
         _mapper.Map(employee, employeeEntity);
 
-        _repo.Save();
+        await _repo.SaveAsync();
         return NoContent();
     }
     //  the patch request
     [HttpPatch("{id}")]
-    public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id,
+    public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id,
 [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
     {
         if (!ModelState.IsValid)
@@ -119,14 +120,14 @@ public class EmployeControllers : ControllerBase
             return BadRequest("patchDoc object is null");
         }
 
-        var company = _repo.Company.GetCompany(companyId, trackChanges: false);
+        var company = await _repo.Company.GetCompanyAsync(companyId, trackChanges: false);
         if (company == null)
         {
             _logger.LogInformation($"Company with id: {companyId} doesn't exist in the database.");
             return NotFound();
         }
 
-        var employeeEntity = _repo.Employee.getEmployee(companyId, id, trackChanges:
+        var employeeEntity = await _repo.Employee.getEmployeeAsync(companyId, id, trackChanges:
     true);
         if (employeeEntity == null)
         {
@@ -140,7 +141,7 @@ public class EmployeControllers : ControllerBase
 
         _mapper.Map(employeeToPatch, employeeEntity);
 
-        _repo.Save();
+        await _repo.SaveAsync();
 
         return NoContent();
     }
