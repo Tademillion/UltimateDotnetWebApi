@@ -23,4 +23,5 @@ public class EmployeeParameters : RequestParameters
     public uint MinAge { get; set; }
     public uint MaxAge { get; set; } = 65;
     public bool ValidAgeRange => MaxAge > MinAge;
+    public string searchTerm { get; set; }
 }
