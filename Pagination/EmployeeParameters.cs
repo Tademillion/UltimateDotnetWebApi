@@ -12,6 +12,7 @@ public class RequestParameters
         set
         {
             _pageSize = (value > maxPageSize) ? maxPageSize : value;
+            //  this is only to restrict the maxPageNumber
         }
     }
 }
@@ -19,4 +20,7 @@ public class RequestParameters
 public class EmployeeParameters : RequestParameters
 {
     //  for examples if we want to add more parameters specific to employee
+    public uint MinAge { get; set; }
+    public uint MaxAge { get; set; } = 65;
+    public bool ValidAgeRange => MaxAge > MinAge;
 }

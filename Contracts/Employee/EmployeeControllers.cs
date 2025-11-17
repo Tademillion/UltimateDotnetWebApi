@@ -21,6 +21,12 @@ public class EmployeControllers : ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters parameters)
     {
+        //  valiate the age range
+        if (!parameters.ValidAgeRange)
+        {
+            _logger.LogError("Max age can't be less than min age.");
+            return BadRequest("Max age can't be less than min age.");
+        }
         var company = await _repo.Company.GetCompanyAsync(companyId, trackChanges: false);
         if (company == null)
             return NotFound();
