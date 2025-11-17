@@ -12,7 +12,7 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
   {
     var employees = await FindByCondition(e => e.CompanyId.Equals(companyId) &&
     e.Age >= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge,
- trackChanges)
+ trackChanges).FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
  .OrderBy(e => e.Name)
  .ToListAsync();
     return PagedList<Employee>
