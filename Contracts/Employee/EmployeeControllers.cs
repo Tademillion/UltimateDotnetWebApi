@@ -39,10 +39,11 @@ public class EmployeControllers : ControllerBase
     [HttpGet("{id}", Name = "GetEmployeeForCompany")]
     public async Task<ActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
     {
+        // 
         var company = await _repo.Company.GetCompanyAsync(companyId, trackChanges: false);
         if (company == null)
             return NotFound();
-
+            
         var employeeFromDb = await _repo.Employee.getEmployeeAsync(companyId, id, trackChanges: false);
         return Ok(employeeFromDb);
     }

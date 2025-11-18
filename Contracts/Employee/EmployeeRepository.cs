@@ -12,10 +12,9 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
   {
     var employees = await FindByCondition(e => e.CompanyId.Equals(companyId) &&
     e.Age >= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge,
-    trackChanges).FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
-//  .Search(employeeParameters.searchTerm)
-    .OrderBy(e => e.Name)
-    .ToListAsync();
+ trackChanges).FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+ .OrderBy(e => e.Name)
+ .ToListAsync();
     return PagedList<Employee>
     .ToPagedList(employees, employeeParameters.PageNumber, employeeParameters.PageSize);
   }
@@ -28,6 +27,3 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
   public void DeleteEmployee(Employee employee) => Delete(employee);
 
 }
-
-
-
