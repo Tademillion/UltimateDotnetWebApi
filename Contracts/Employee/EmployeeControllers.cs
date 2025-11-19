@@ -22,6 +22,8 @@ public class EmployeControllers : ControllerBase
     public async Task<ActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters parameters)
     {
         //  valiate the age range
+                Console.WriteLine($"the order by is is ${parameters.orderBy}");
+
         if (!parameters.ValidAgeRange)
         {
             _logger.LogError("Max age can't be less than min age.");
