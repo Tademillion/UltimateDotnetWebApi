@@ -20,14 +20,13 @@ public class RequestParameters
 public class EmployeeParameters : RequestParameters
 {
     //  for examples if we want to add more parameters specific to employee
-    // public EmployeeParameters()
-    // {
-    //     orderBy = "name"; 
-        
-    // }
+ 
     public uint MinAge { get; set; }
     public uint MaxAge { get; set; } = 65;
     public bool ValidAgeRange => MaxAge > MinAge;
     public string searchTerm { get; set; }
     public string orderBy {get;set;}="name";
+    //  datatshaping selectint the needed fields only 
+    public string Fields { get; set; } 
+
 }

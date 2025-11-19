@@ -11,12 +11,13 @@ public class EmployeControllers : ControllerBase
     private readonly IRepositoryManager _repo;
     private readonly IMapper _mapper;
     private readonly ILogger<EmployeControllers> _logger;
-
-    public EmployeControllers(IRepositoryManager repo, IMapper mapper, ILogger<EmployeControllers> logger)
+ private readonly IDataShaper<EmployeeDto> _dataShaper;
+    public EmployeControllers(IRepositoryManager repo, IMapper mapper, ILogger<EmployeControllers> logger,IDataShaper<EmployeeDto> datashapper)
     {
         _repo = repo;
         _mapper = mapper;
         _logger = logger;
+        _dataShaper=datashapper;
     }
     [HttpGet]
     public async Task<ActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters parameters)
@@ -36,7 +37,8 @@ public class EmployeControllers : ControllerBase
         var employeesFromDb = await _repo.Employee.GetEmployeesAsync(companyId, parameters, trackChanges: false);
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(employeesFromDb.MetaData));
         var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
-        return Ok(employeesDto);
+        // return Ok(employeesDto);
+        return Ok(_dataShaper.ShapeData(employeesDto,parameters.Fields));
     }
     [HttpGet("{id}", Name = "GetEmployeeForCompany")]
     public async Task<ActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
