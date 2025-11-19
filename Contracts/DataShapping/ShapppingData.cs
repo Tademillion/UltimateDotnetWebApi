@@ -58,12 +58,18 @@ StringSplitOptions.RemoveEmptyEntries);
     private ExpandoObject FetchDataForEntity(T entity, IEnumerable<PropertyInfo> requiredProperties) 
     { 
         var shapedObject = new ExpandoObject(); 
- 
+     var dict = (IDictionary<string, object>)shapedObject;
+
         foreach (var property in requiredProperties) 
         { 
             var objectPropertyValue = property.GetValue(entity); 
             shapedObject.TryAdd(property.Name, objectPropertyValue); 
         } 
+       var idProperty = entity.GetType().GetProperty("Id");
+    if (idProperty != null)
+    {
+        dict["Id"] = idProperty.GetValue(entity);
+    }
         return shapedObject; 
     } 
 }

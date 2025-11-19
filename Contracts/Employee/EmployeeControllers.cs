@@ -12,19 +12,19 @@ public class EmployeControllers : ControllerBase
     private readonly IMapper _mapper;
     private readonly ILogger<EmployeControllers> _logger;
  private readonly IDataShaper<EmployeeDto> _dataShaper;
-    public EmployeControllers(IRepositoryManager repo, IMapper mapper, ILogger<EmployeControllers> logger,IDataShaper<EmployeeDto> datashapper)
+ private readonly  EmployeeLinks _employeeLinks;
+    public EmployeControllers(IRepositoryManager repo, IMapper mapper, ILogger<EmployeControllers> logger,IDataShaper<EmployeeDto> datashapper,EmployeeLinks EmployeeLinks)
     {
         _repo = repo;
         _mapper = mapper;
         _logger = logger;
         _dataShaper=datashapper;
+        _employeeLinks=EmployeeLinks;
     }
     [HttpGet]
     public async Task<ActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters parameters)
     {
-        //  valiate the age range
-                Console.WriteLine($"the order by is is ${parameters.orderBy}");
-
+        //  valiate the age range 
         if (!parameters.ValidAgeRange)
         {
             _logger.LogError("Max age can't be less than min age.");
@@ -38,6 +38,7 @@ public class EmployeControllers : ControllerBase
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(employeesFromDb.MetaData));
         var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
         // return Ok(employeesDto);
+        
         return Ok(_dataShaper.ShapeData(employeesDto,parameters.Fields));
     }
     [HttpGet("{id}", Name = "GetEmployeeForCompany")]
