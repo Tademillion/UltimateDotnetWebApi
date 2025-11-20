@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
+[ApiVersion("1.0",Deprecated =true)]
 [Route("api/companies")]
 public class CompaniesController : ControllerBase
 {
@@ -33,7 +34,7 @@ public class CompaniesController : ControllerBase
         return Ok(companiesDto);
 
     }
-    [HttpGet("{id}")]// this should adde in order to get  CreatedAtRoute with correct http response
+    [HttpGet("{id}", Name = "GetCompanyById")]// this should adde in order to get  CreatedAtRoute with correct http response
     public async Task<ActionResult> getSingleCompany(Guid id)
     {
         var company = await _repo.Company.GetCompanyAsync(id, false);
@@ -47,6 +48,7 @@ public class CompaniesController : ControllerBase
     }
     //  create the company
     [HttpPost]
+    [MapToApiVersion("1.0")]
     public async Task<ActionResult> createCompany([FromBody] CompanyForCreationDto company)
     {
         var companyEntity = _mapper.Map<Company>(company);// convert the company to Company
@@ -54,7 +56,7 @@ public class CompaniesController : ControllerBase
         await _repo.SaveAsync();
         var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
 
-        return CreatedAtRoute("id", new { id = companyToReturn.Id }, companyToReturn);
+        return CreatedAtRoute("GetCompanyById", new { id = companyToReturn.Id }, companyToReturn);
     }
     [HttpGet("collection/({ids})", Name = "CompanyCollection")]
     // public IActionResult GetCompanyCollection(IEnumerable<Guid> ids)
@@ -75,7 +77,7 @@ public class CompaniesController : ControllerBase
         return Ok(companiesToReturn);
     }
     // create collection of companies 
-    [HttpPost("collection")]
+    [HttpPost("collection"),MapToApiVersion("1.0")]
     public async Task<IActionResult> CreateCompanyCollection([FromBody]
 IEnumerable<CompanyForCreationDto> companyCollection)
     {

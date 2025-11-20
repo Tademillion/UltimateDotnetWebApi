@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MyApp;
 using Serilog;
 
@@ -34,8 +37,13 @@ internal class Program
         // builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<EmployeeLinks>();
         // builder.Services.AddScoped(typeof(IEntityLinksService<>), typeof(EntityLinksService<>));
-
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+          builder.Services.AddApiVersioning(opt=>{
+            opt.ReportApiVersions=true;
+            opt.AssumeDefaultVersionWhenUnspecified=true;
+            opt.DefaultApiVersion=new ApiVersion(1,0);
+            opt.ApiVersionReader= new HeaderApiVersionReader("api-version");
+          });
+         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         builder.Services.AddControllers(config =>
         {
             config.RespectBrowserAcceptHeader = true;

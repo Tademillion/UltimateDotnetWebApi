@@ -6,8 +6,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-
+// [Route("api/{v:apiVersion}/companies/{companyId}/employees")] this ano ways
 [Route("api/companies/{companyId}/employees")]
+// [ApiController]
 public class EmployeControllers : ControllerBase
 {
     private readonly IRepositoryManager _repo;
