@@ -23,7 +23,10 @@ public class EmployeControllers : ControllerBase
         _dataShaper = datashapper;
         _employeeLinks = employeeLinks;
     }
+    // [HttpOptions]
+
     [HttpGet(Name = "GetEmployeesForCompany")]
+    // [HttpHead] thehead method donot return the body
     public async Task<ActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters parameters)
     {
         //  valiate the age range 
@@ -32,6 +35,7 @@ public class EmployeControllers : ControllerBase
             _logger.LogError("Max age can't be less than min age.");
             return BadRequest("Max age can't be less than min age.");
         }
+        Response.Headers.Add("allowed-methods", "GET");
         var company = await _repo.Company.GetCompanyAsync(companyId, trackChanges: false);
         if (company == null)
             return NotFound();
