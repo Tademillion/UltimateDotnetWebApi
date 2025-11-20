@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Dynamic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
@@ -12,16 +14,16 @@ public class EmployeControllers : ControllerBase
     private readonly IMapper _mapper;
     private readonly ILogger<EmployeControllers> _logger;
  private readonly IDataShaper<EmployeeDto> _dataShaper;
- private readonly  EmployeeLinks _employeeLinks;
-    public EmployeControllers(IRepositoryManager repo, IMapper mapper, ILogger<EmployeControllers> logger,IDataShaper<EmployeeDto> datashapper,EmployeeLinks EmployeeLinks)
+ private readonly EmployeeLinks _employeeLinks;
+    public EmployeControllers( EmployeeLinks employeeLinks, IRepositoryManager repo, IMapper mapper, ILogger<EmployeControllers> logger,IDataShaper<EmployeeDto> datashapper)
     {
         _repo = repo;
         _mapper = mapper;
         _logger = logger;
-        _dataShaper=datashapper;
-        _employeeLinks=EmployeeLinks;
+        _dataShaper = datashapper;
+        _employeeLinks = employeeLinks;
     }
-    [HttpGet]
+    [HttpGet(Name = "GetEmployeesForCompany")]
     public async Task<ActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters parameters)
     {
         //  valiate the age range 
@@ -35,11 +37,13 @@ public class EmployeControllers : ControllerBase
             return NotFound();
 
         var employeesFromDb = await _repo.Employee.GetEmployeesAsync(companyId, parameters, trackChanges: false);
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(employeesFromDb.MetaData));
-        var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
-        // return Ok(employeesDto);
-        
-        return Ok(_dataShaper.ShapeData(employeesDto,parameters.Fields));
+        Response.Headers["X-Pagination"] = JsonConvert.SerializeObject(employeesFromDb.MetaData);
+        var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb).ToList();
+
+        var shapedList = _dataShaper.ShapeData(employeesDto, parameters.Fields).ToList();
+        var linkedResult = _employeeLinks.TryGenerateLinks(shapedList,employeesDto,HttpContext,companyId);
+
+    return Ok(linkedResult);
     }
     [HttpGet("{id}", Name = "GetEmployeeForCompany")]
     public async Task<ActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
@@ -47,10 +51,13 @@ public class EmployeControllers : ControllerBase
         // 
         var company = await _repo.Company.GetCompanyAsync(companyId, trackChanges: false);
         if (company == null)
-            return NotFound();
-            
+            return NotFound(); 
         var employeeFromDb = await _repo.Employee.getEmployeeAsync(companyId, id, trackChanges: false);
-        return Ok(employeeFromDb);
+        if (employeeFromDb == null) return NotFound();
+
+        var employeeDto = _mapper.Map<EmployeeDto>(employeeFromDb);
+
+       return Ok(employeeDto);
     }
     [HttpPost]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
@@ -72,10 +79,9 @@ public class EmployeControllers : ControllerBase
         await _repo.SaveAsync();
         var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);// output then input
 
-        // return CreatedAtRoute("GetEmployeeForCompany", new { id = employeeToReturn.Id }, employeeToReturn);
-        return Ok("the user is creatde");
+        return CreatedAtRoute("GetEmployeeForCompany", new { companyId = companyId, id = employeeToReturn.Id }, employeeToReturn);
     }
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}", Name = "DeleteEmployeeForCompany")]
     public async Task<ActionResult> DeleteEmployeeForCompany(Guid companyid, Guid id)
     {
         var isUserExist = await _repo.Employee.getEmployeeAsync(companyid, id, false);
@@ -87,7 +93,7 @@ public class EmployeControllers : ControllerBase
     }
     //  updadet the employee 
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}", Name = "UpdateEmployeeForCompany")]
     public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
     {
         //  

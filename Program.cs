@@ -30,6 +30,10 @@ internal class Program
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();// register the services 
         builder.Services.AddScoped<IDataShaper<EmployeeDto>,DataShaper<EmployeeDto>>();
         builder.Services.AddScoped<ValidationFilterAttribute>();
+        // HATEOAS support
+        // builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<EmployeeLinks>();
+        // builder.Services.AddScoped(typeof(IEntityLinksService<>), typeof(EntityLinksService<>));
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         builder.Services.AddControllers(config =>
