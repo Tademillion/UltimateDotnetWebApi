@@ -29,6 +29,8 @@ public class Employee
     public string Name { get; set; }
 
     [Required(ErrorMessage = "Age is a required field.")]
+    [Range(1,300,ErrorMessage ="the range should be between the age should not be negative and not above 300")]
+
     public int Age { get; set; }
 
     [Required(ErrorMessage = "Position is a required field.")]

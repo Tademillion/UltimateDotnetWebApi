@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Microsoft.VisualBasic;
 // [Route("api/{v:apiVersion}/companies/{companyId}/employees")] this ano ways
 [Route("api/companies/{companyId}/employees")]
 // [ApiController]
@@ -43,8 +44,8 @@ public class EmployeControllers : ControllerBase
 
         var employeesFromDb = await _repo.Employee.GetEmployeesAsync(companyId, parameters, trackChanges: false);
         Response.Headers["X-Pagination"] = JsonConvert.SerializeObject(employeesFromDb.MetaData);
-        var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb).ToList();
-
+         var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb).ToList();
+ 
         var shapedList = _dataShaper.ShapeData(employeesDto, parameters.Fields).ToList();
         var linkedResult = _employeeLinks.TryGenerateLinks(shapedList,employeesDto,HttpContext,companyId);
 
@@ -79,7 +80,7 @@ public class EmployeControllers : ControllerBase
             return NotFound();
         //  i should have map it to the employee
         var employeeEntity = _mapper.Map<Employee>(employee);
-
+ 
         _repo.Employee.CreateEmployee(companyId, employeeEntity);
         await _repo.SaveAsync();
         var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);// output then input

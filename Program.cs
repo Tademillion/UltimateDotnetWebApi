@@ -68,6 +68,8 @@ internal class Program
         {
             config.RespectBrowserAcceptHeader = true;
             config.ReturnHttpNotAcceptable = true;
+            // config.Filters.Add(typeof(ValidationFilterAttribute)); this apply thr model state filteration over  all the projects 
+            //  its cool
         }).AddNewtonsoftJson()// for patch requests
         .AddXmlDataContractSerializerFormatters();// used to chnage only json to different response types
         builder.Services.AddCors(options =>
