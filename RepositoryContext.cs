@@ -10,7 +10,8 @@ public class RepositoryContext : DbContext
     {
         modelBuilder.ApplyConfiguration(new CompanyConfiguration());
         modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-    }
+ 
+     }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Employee> Employees { get; set; }
     //  creating migration in dotnet core 
