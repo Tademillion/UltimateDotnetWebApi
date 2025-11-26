@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class RepositoryContext : DbContext
+public class RepositoryContext :IdentityDbContext<User>
 {
     public RepositoryContext(DbContextOptions options)
     : base(options)
@@ -8,9 +9,11 @@ public class RepositoryContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //  to crreate the configurations for the models for default tables like NetIdentityUser,NetIdentityRole
+         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfiguration(new CompanyConfiguration());
         modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
- 
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
      }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Employee> Employees { get; set; }

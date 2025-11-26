@@ -1,4 +1,5 @@
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
@@ -64,6 +65,18 @@ internal class Program
             };});
             // 
          builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        //  add identity services
+        builder.Services.AddIdentity<IdentityUser, IdentityRole>(option =>
+        {
+            option.Password.RequireDigit = true;
+            option.Password.RequireLowercase = true;
+            option.Password.RequireUppercase = true;
+            option.Password.RequireNonAlphanumeric = false;
+            option.Password.RequiredLength = 8;
+            option.User.RequireUniqueEmail = true;
+        }).AddEntityFrameworkStores<RepositoryContext>()
+        .AddDefaultTokenProviders();
+        
         builder.Services.AddControllers(config =>
         {
             config.RespectBrowserAcceptHeader = true;
