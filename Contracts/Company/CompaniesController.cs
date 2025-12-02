@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiVersion("1.0",Deprecated =true)]
 [Route("api/companies")]
-[Authorize]
 public class CompaniesController : ControllerBase
 {
     private readonly IRepositoryManager _repo;
@@ -20,7 +19,7 @@ public class CompaniesController : ControllerBase
         _repo = repo;
     }
 
-    [HttpGet]
+    [HttpGet,Authorize(Roles = "administrator")]
      public async Task<ActionResult> getCompanies()
     {
         var companies = await _repo.Company.GetAllCompaniesAsync(false);
