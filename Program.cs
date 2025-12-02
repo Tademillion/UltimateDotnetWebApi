@@ -39,7 +39,7 @@ internal class Program
         // builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<EmployeeLinks>();
         // builder.Services.AddScoped(typeof(IEntityLinksService<>), typeof(EntityLinksService<>));
-          builder.Services.AddApiVersioning(opt=>{
+          builder.Services.AddApiVersioning(opt=>{// we can add versioning to the extensions as well in service extensions
             opt.ReportApiVersions=true;
             opt.AssumeDefaultVersionWhenUnspecified=true;
             opt.DefaultApiVersion=new ApiVersion(1,0);
@@ -81,7 +81,7 @@ internal class Program
         }).AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();
         //
-        builder.Services.ConfigureJWT(builder.Configuration);
+        // builder.Services.ConfigureJWT(builder.Configuration);
          builder.Services.AddControllers(config =>
         {
             config.RespectBrowserAcceptHeader = true;

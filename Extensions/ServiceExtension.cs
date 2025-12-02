@@ -17,14 +17,13 @@ opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 { 
 options.TokenValidationParameters = new TokenValidationParameters 
 { 
-ValidateIssuer = true, 
-ValidateAudience = true, 
-ValidateLifetime = true, 
-ValidateIssuerSigningKey = true, 
+ValidateIssuer = true, // server created the token
+ValidateAudience = true, // the valid allowed client get the token
+ValidateLifetime = true, // token is not expired
+ValidateIssuerSigningKey = true, // key is valid
 ValidIssuer = jwtSettings.GetSection("validIssuer").Value, 
 ValidAudience = jwtSettings.GetSection("validAudience").Value, 
-IssuerSigningKey = new 
-SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)) 
+IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)) 
 }; 
 }); 
 } 

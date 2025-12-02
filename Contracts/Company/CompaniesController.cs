@@ -1,9 +1,10 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[ApiVersion("1.0",Deprecated =true)]
+// [ApiVersion("1.0",Deprecated =true)]
 [Route("api/companies")]
 public class CompaniesController : ControllerBase
 {
