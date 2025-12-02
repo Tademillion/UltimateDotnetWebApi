@@ -7,8 +7,8 @@ public static class ServiceExtensions
     public static void ConfigureJWT(this IServiceCollection services, IConfiguration 
 configuration) 
 { 
-var jwtSettings = configuration.GetSection("JwtSettings"); 
-var secretKey = Environment.GetEnvironmentVariable("SECRET"); 
+var jwtSettings = configuration.GetSection("jwt"); 
+var secretKey = jwtSettings["secretKey"]; 
 services.AddAuthentication(opt => { 
 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
@@ -25,7 +25,29 @@ ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
 ValidAudience = jwtSettings.GetSection("validAudience").Value, 
 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)) 
 }; 
-}); 
+options.Events = new JwtBearerEvents 
+{
+    OnAuthenticationFailed = context =>
+    {
+        Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+        return Task.CompletedTask;
+    },
+    OnChallenge = context =>
+    {
+       context.HandleResponse(); // Stops the default challenge/redirect behavior
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync("{\"message\": \"Authentication failed: Token missing or invalid.\"}");
+    },
+    OnTokenValidated = context =>
+    {
+        Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
+        return Task.CompletedTask;
+    }   
+};
+}
+  
+) ;
 } 
 
 }

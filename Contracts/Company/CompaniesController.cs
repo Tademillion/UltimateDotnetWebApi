@@ -1,11 +1,13 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-// [ApiVersion("1.0",Deprecated =true)]
+[ApiVersion("1.0",Deprecated =true)]
 [Route("api/companies")]
+[Authorize]
 public class CompaniesController : ControllerBase
 {
     private readonly IRepositoryManager _repo;
@@ -19,7 +21,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult> getCompanies()
+     public async Task<ActionResult> getCompanies()
     {
         var companies = await _repo.Company.GetAllCompaniesAsync(false);
         //  add Dto instead 

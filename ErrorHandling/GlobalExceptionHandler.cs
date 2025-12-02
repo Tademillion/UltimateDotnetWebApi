@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -19,7 +20,7 @@ public class GlobalExceptionMiddleware
         try
         {
             //  here we log or  request and the responses as well
-            _logger.LogInformation("the reuqest information is"+context.Request.Body,context.Request.Headers);
+            _logger.LogInformation("the reuqest information is "+context.Request.GetDisplayUrl(),context.Request.Body,context.Request.Headers);
             await _next(context);
         }
         catch (Exception ex)

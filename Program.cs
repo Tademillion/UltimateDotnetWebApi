@@ -81,7 +81,7 @@ internal class Program
         }).AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();
         //
-        // builder.Services.ConfigureJWT(builder.Configuration);
+        builder.Services.ConfigureJWT(builder.Configuration);
          builder.Services.AddControllers(config =>
         {
             config.RespectBrowserAcceptHeader = true;
@@ -113,6 +113,7 @@ internal class Program
             // configure for IIS Deployments and have many properties
 
         });
+        // builder.Services.AddAuthentication();
         // builder.Logging.ClearProviders(); 
         // builder.Logging.AddConsole();
         var app = builder.Build();
@@ -134,7 +135,7 @@ internal class Program
         app.UseRateLimiter();
 
         app.MapControllers();
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
         var summaries = new[]
         {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
