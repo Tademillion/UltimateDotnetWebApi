@@ -14,6 +14,7 @@ public class MappingProfile : Profile
         CreateMap<EmployeeForUpdateDto, Employee>();
         //  reverse mapping for patch
         CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
+        CreateMap<UserForRegistrationDto, User>();
     }
 }
 

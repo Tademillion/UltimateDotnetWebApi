@@ -65,8 +65,11 @@ internal class Program
             };});
             // 
          builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        //  builder.Services.AddAutoMapper(typeof(MappingProfile));
         //  add identity services
-        builder.Services.AddIdentity<IdentityUser, IdentityRole>(option =>
+        //  let add identity
+        
+        builder.Services.AddIdentity<User, IdentityRole>(option =>
         {
             option.Password.RequireDigit = true;
             option.Password.RequireLowercase = true;
@@ -111,7 +114,7 @@ internal class Program
         // builder.Logging.ClearProviders(); 
         // builder.Logging.AddConsole();
         var app = builder.Build();
-
+   
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
