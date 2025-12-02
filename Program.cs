@@ -76,11 +76,12 @@ internal class Program
             option.Password.RequireLowercase = true;
             option.Password.RequireUppercase = true;
             option.Password.RequireNonAlphanumeric = false;
-            option.Password.RequiredLength = 10;
+            option.Password.RequiredLength = 6;
             option.User.RequireUniqueEmail = true; 
         }).AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();
         //
+        builder.Services.AddScoped<IAuthenticationManager, AuthenticationManager>();
         builder.Services.ConfigureJWT(builder.Configuration);
          builder.Services.AddControllers(config =>
         {
