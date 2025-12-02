@@ -71,16 +71,18 @@ internal class Program
         
         builder.Services.AddIdentity<User, IdentityRole>(option =>
         {
+            //  here is place where restric the password options
             option.Password.RequireDigit = true;
             option.Password.RequireLowercase = true;
             option.Password.RequireUppercase = true;
             option.Password.RequireNonAlphanumeric = false;
-            option.Password.RequiredLength = 8;
-            option.User.RequireUniqueEmail = true;
+            option.Password.RequiredLength = 10;
+            option.User.RequireUniqueEmail = true; 
         }).AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();
-        
-        builder.Services.AddControllers(config =>
+        //
+        builder.Services.ConfigureJWT(builder.Configuration);
+         builder.Services.AddControllers(config =>
         {
             config.RespectBrowserAcceptHeader = true;
             config.ReturnHttpNotAcceptable = true;
