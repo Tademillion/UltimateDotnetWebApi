@@ -47,7 +47,7 @@ configuration)
     { 
         var claims = new List<Claim> 
         { 
-            new Claim(ClaimTypes.Name, _user.UserName) 
+            new Claim(ClaimTypes.Name, _user.UserName,_user.LastName) 
         }; 
  
         var roles = await _userManager.GetRolesAsync(_user); 
@@ -62,15 +62,15 @@ configuration)
     private JwtSecurityToken GenerateTokenOptions(SigningCredentials 
 signingCredentials, List<Claim> claims) 
     { 
-        var jwtSettings = _configuration.GetSection("JwtSettings"); 
+        var jwtSettings = _configuration.GetSection("jwt"); 
  
         var tokenOptions = new JwtSecurityToken 
         ( 
-            issuer: jwtSettings.GetSection("validIssuer").Value, 
-            audience: jwtSettings.GetSection("validAudience").Value, 
+            issuer: jwtSettings["validIssuer"], 
+            audience: jwtSettings["validAudience"], 
             claims: claims, 
             expires: 
-DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings.GetSection("expires").Value)), 
+DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])), 
             signingCredentials: signingCredentials 
         ); 
         return tokenOptions; 
