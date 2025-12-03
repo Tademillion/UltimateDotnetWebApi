@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using MyApp;
-using Serilog;
-
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 internal class Program
 {
     private static void Main(string[] args)
@@ -23,7 +22,6 @@ internal class Program
                                        //             .WriteTo.Console()    // Log to the console
                                        //             .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day) // Log to a file, rolling daily
                                        //             .CreateLogger();
-
         //  register the services
         builder.Services.AddScoped<ISendMessage, SendEmailMessage>();
         builder.Services.AddScoped<ISendMessage, SendsmsMessage>();
@@ -64,11 +62,10 @@ internal class Program
                 await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", cancellationToken);
             };});
             // 
-         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        //  builder.Services.AddAutoMapper(typeof(MappingProfile));
+        //  builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+         builder.Services.AddAutoMapper(typeof(MappingProfile));
         //  add identity services
-        //  let add identity
-        
+        //  let add identity 
         builder.Services.AddIdentity<User, IdentityRole>(option =>
         {
             //  here is place where restric the password options
@@ -117,19 +114,22 @@ internal class Program
         // builder.Services.AddAuthentication();
         // builder.Logging.ClearProviders(); 
         // builder.Logging.AddConsole();
+        // builder.Services.AddEndpointsApiExplorer();
+        builder.Services.ConfigureSwagger();       
         var app = builder.Build();
    
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-        }
-
+        } 
         //  middlewares order
         app.UseCors("allowAllOrigin");
         // app.UseMiddleware<GlobalExceptionMiddleware>();
         app.UseGlobalExceptionHandler();//
         app.UseStaticFiles();
-        app.UseRouting();
+        app.UseSwagger();
+        app.UseSwaggerUI();
+       app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
 
@@ -141,11 +141,8 @@ internal class Program
         {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
-
-
         //  minimal Api
-        app.MapGet("/", () => "this is test for hello");
-
+        app.MapGet("/", () => "this is test for hello"); 
 
         app.Run();
     }

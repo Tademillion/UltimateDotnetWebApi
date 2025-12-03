@@ -19,7 +19,7 @@ public class CompaniesController : ControllerBase
         _repo = repo;
     }
 
-    [HttpGet,Authorize(Roles = "administrator")]
+    [HttpGet,Authorize]
      public async Task<ActionResult> getCompanies()
     {
         var companies = await _repo.Company.GetAllCompaniesAsync(false);
